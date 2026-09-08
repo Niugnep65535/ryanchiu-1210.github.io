@@ -15,11 +15,12 @@
     --ink-soft: #5B5F66;
     --ink-faint: #8B8E93;
     --line: #DEDCD5;
+    --accent: #2451B3;
     --accent-soft: #EAF0FB;
     --silver: #7C8087;
     --bronze: #A0703C;
     --honor: #6B6E73;
-    --max: 700px;
+    --max: 720px;
   }
 
   * { box-sizing: border-box; }
@@ -236,9 +237,44 @@
     .hero { padding: 64px 0 44px; }
     section { padding: 40px 0; }
   }
+
+  /* Corner registration marks — fills the side margins on wide screens */
+  .crop-marks { display: none; }
+  @media (min-width: 900px) {
+    .crop-marks { display: block; }
+    .mark {
+      position: fixed;
+      width: 18px;
+      height: 18px;
+      pointer-events: none;
+    }
+    .mark::before, .mark::after {
+      content: '';
+      position: absolute;
+      background: var(--ink-faint);
+      opacity: 0.4;
+    }
+    .mark::before { width: 18px; height: 1px; }
+    .mark::after { width: 1px; height: 18px; }
+    .tl { top: 28px; left: 28px; }
+    .tl::before, .tl::after { top: 0; left: 0; }
+    .tr { top: 28px; right: 28px; }
+    .tr::before, .tr::after { top: 0; right: 0; }
+    .bl { bottom: 28px; left: 28px; }
+    .bl::before, .bl::after { bottom: 0; left: 0; }
+    .br { bottom: 28px; right: 28px; }
+    .br::before, .br::after { bottom: 0; right: 0; }
+  }
 </style>
 </head>
 <body>
+
+  <div class="crop-marks" aria-hidden="true">
+    <span class="mark tl"></span>
+    <span class="mark tr"></span>
+    <span class="mark bl"></span>
+    <span class="mark br"></span>
+  </div>
 
   <div class="wrap">
     <header class="hero">
@@ -314,7 +350,7 @@
       <div class="contact-list">
         <div class="contact-row">
           <span class="k">Github</span>
-          <span>ryanchiu-1210</span>
+          <a href="https://github.com/ryanchiu-1210" target="_blank" rel="noopener">ryanchiu-1210</a>
         </div>
         <div class="contact-row">
           <span class="k">Email</span>
