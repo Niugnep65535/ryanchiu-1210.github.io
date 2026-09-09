@@ -238,43 +238,81 @@
     section { padding: 40px 0; }
   }
 
-  /* Corner registration marks — fills the side margins on wide screens */
-  .crop-marks { display: none; }
-  @media (min-width: 900px) {
-    .crop-marks { display: block; }
-    .mark {
+  /* Side navigation — fills the left margin with a real jump-to-section index */
+  .side-nav { display: none; }
+  .side-label { display: none; }
+  @media (min-width: 1180px) {
+    .side-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
       position: fixed;
-      width: 18px;
-      height: 18px;
-      pointer-events: none;
+      left: 48px;
+      top: 50%;
+      transform: translateY(-50%);
+      padding-left: 18px;
     }
-    .mark::before, .mark::after {
+    .side-nav::before {
       content: '';
       position: absolute;
-      background: var(--ink-faint);
-      opacity: 0.4;
+      left: 3px;
+      top: 4px;
+      bottom: 4px;
+      width: 1px;
+      background: var(--line);
     }
-    .mark::before { width: 18px; height: 1px; }
-    .mark::after { width: 1px; height: 18px; }
-    .tl { top: 28px; left: 28px; }
-    .tl::before, .tl::after { top: 0; left: 0; }
-    .tr { top: 28px; right: 28px; }
-    .tr::before, .tr::after { top: 0; right: 0; }
-    .bl { bottom: 28px; left: 28px; }
-    .bl::before, .bl::after { bottom: 0; left: 0; }
-    .br { bottom: 28px; right: 28px; }
-    .br::before, .br::after { bottom: 0; right: 0; }
+    .side-nav a {
+      position: relative;
+      font-size: 13px;
+      color: var(--ink-faint);
+      border-bottom: none;
+      letter-spacing: 0.02em;
+    }
+    .side-nav a::before {
+      content: '';
+      position: absolute;
+      left: -21px;
+      top: 50%;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--bg);
+      border: 1px solid var(--line);
+      transform: translateY(-50%);
+      transition: background 0.15s ease, border-color 0.15s ease;
+    }
+    .side-nav a:hover, .side-nav a:focus-visible, .side-nav a.active {
+      color: var(--ink);
+    }
+    .side-nav a:hover::before, .side-nav a:focus-visible::before, .side-nav a.active::before {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .side-label {
+      display: block;
+      position: fixed;
+      right: 44px;
+      top: 50%;
+      transform: translateY(-50%);
+      writing-mode: vertical-rl;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.15em;
+      color: var(--ink-faint);
+    }
   }
 </style>
 </head>
 <body>
 
-  <div class="crop-marks" aria-hidden="true">
-    <span class="mark tl"></span>
-    <span class="mark tr"></span>
-    <span class="mark bl"></span>
-    <span class="mark br"></span>
-  </div>
+  <nav class="side-nav" aria-label="頁面導覽">
+    <a href="#about">關於我</a>
+    <a href="#skills">技能</a>
+    <a href="#competitions">競賽經歷</a>
+    <a href="#contact">聯絡方式</a>
+  </nav>
+  <div class="side-label" aria-hidden="true">PORTFOLIO — 2026</div>
 
   <div class="wrap">
     <header class="hero">
@@ -283,7 +321,7 @@
       <p class="goal">現階段目標是挑戰<strong>國手選拔</strong>，持續在軟體開發與競賽場上累積實力。</p>
     </header>
 
-    <section class="about">
+    <section class="about" id="about">
       <h2>關於我</h2>
       <p>高中生</p>
       <p>技能競賽國手，目標是國手選拔</p>
@@ -291,7 +329,7 @@
       <p>我專案的代碼不是claude大神寫的就是我自己寫的一坨屎山</p>
     </section>
 
-    <section class="skills">
+    <section class="skills" id="skills">
       <h2>技能</h2>
       <div class="skill-group">
         <p class="skill-label">語言</p>
@@ -311,7 +349,7 @@
       </div>
     </section>
 
-    <section class="competitions">
+    <section class="competitions" id="competitions">
       <h2>競賽經歷</h2>
       <div class="timeline">
         <div class="entry">
@@ -345,7 +383,7 @@
       </div>
     </section>
 
-    <section class="contact">
+    <section class="contact" id="contact">
       <h2>聯絡方式</h2>
       <div class="contact-list">
         <div class="contact-row">
@@ -370,6 +408,21 @@
 
   <script>
     document.getElementById('year').textContent = new Date().getFullYear();
+
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.side-nav a');
+    if (sections.length && navLinks.length) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            navLinks.forEach((link) => {
+              link.classList.toggle('active', link.getAttribute('href') === '#' + entry.target.id);
+            });
+          }
+        });
+      }, { rootMargin: '-40% 0px -50% 0px' });
+      sections.forEach((s) => observer.observe(s));
+    }
   </script>
 
 </body>
